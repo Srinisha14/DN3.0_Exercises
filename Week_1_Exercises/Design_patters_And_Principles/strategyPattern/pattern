@@ -1,0 +1,53 @@
+interface PaymentStrategy {
+    void pay(int amount);
+}
+
+class CreditCardPayment implements PaymentStrategy {
+    private String name;
+    private String cardNumber;
+
+    public CreditCardPayment(String name, String cardNumber) {
+        this.name = name;
+        this.cardNumber = cardNumber;
+    }
+
+    public void pay(int amount) {
+        System.out.println(amount + " paid with credit card");
+    }
+}
+
+class PayPalPayment implements PaymentStrategy {
+    private String email;
+
+    public PayPalPayment(String email) {
+        this.email = email;
+    }
+
+    public void pay(int amount) {
+        System.out.println(amount + " paid using PayPal");
+    }
+}
+
+class PaymentContext {
+    private PaymentStrategy paymentStrategy;
+
+    public void setPaymentStrategy(PaymentStrategy paymentStrategy) {
+        this.paymentStrategy = paymentStrategy;
+    }
+
+    public void executePayment(int amount) {
+        paymentStrategy.pay(amount);
+    }
+}
+
+class TestStrategyPattern {
+    public static void main(String[] args) {
+        PaymentContext context = new PaymentContext();
+        
+        context.setPaymentStrategy(new CreditCardPayment("John Doe", "1234567890"));
+        context.executePayment(100);
+
+        context.setPaymentStrategy(new PayPalPayment("johndoe@example.com"));
+        context.executePayment(200);
+    }
+}

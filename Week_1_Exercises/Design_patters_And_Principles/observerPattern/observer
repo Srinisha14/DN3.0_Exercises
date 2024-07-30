@@ -1,0 +1,60 @@
+import java.util.ArrayList;
+import java.util.List;
+
+interface Observer {
+    void update(String stockName, double price);
+}
+
+interface Subject {
+    void registerObserver(Observer o);
+    void removeObserver(Observer o);
+    void notifyObservers();
+}
+
+class StockMarket implements Subject {
+    private List<Observer> observers = new ArrayList<>();
+    private String stockName;
+    private double price;
+
+    public void setStock(String stockName, double price) {
+        this.stockName = stockName;
+        this.price = price;
+        notifyObservers();
+    }
+
+    public void registerObserver(Observer o) {
+        observers.add(o);
+    }
+
+    public void removeObserver(Observer o) {
+        observers.remove(o);
+    }
+
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(stockName, price);
+        }
+    }
+}
+
+class MobileApp implements Observer {
+    public void update(String stockName, double price) {
+        System.out.println("Mobile App: Stock " + stockName + " updated price: " + price);
+    }
+}
+
+class WebApp implements Observer {
+    public void update(String stockName, double price) {
+        System.out.println("Web App: Stock " + stockName + " updated price: " + price);
+    }
+}
+
+class TestObserverPattern {
+    public static void main(String[] args) {
+        StockMarket stockMarket = new StockMarket();
+        stockMarket.registerObserver(new MobileApp());
+        stockMarket.registerObserver(new WebApp());
+        stockMarket.setStock("AAPL", 150.00);
+        stockMarket.setStock("GOOGL", 2800.00);
+    }
+}
